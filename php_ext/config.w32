@@ -1,0 +1,13 @@
+// $Id$
+// vim:ft=javascript
+
+// If your extension references something external, use ARG_WITH
+// ARG_WITH("ppc_coreimgclip", "for ppc_coreimgclip support", "no");
+
+// Otherwise, use ARG_ENABLE
+// ARG_ENABLE("ppc_coreimgclip", "enable ppc_coreimgclip support", "no");
+
+if (PHP_PPC_COREIMGCLIP != "no") {
+	EXTENSION("ppc_coreimgclip", "ppc_coreimgclip.c");
+}
+
