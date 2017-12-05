@@ -7,7 +7,7 @@ soft文件说明
     ```
     执行测试
     ```
-        ./coreImgClip -s "../images/bags.jpg" -d "../images/newbags.jpg" -w 300 -h 200 -p 1 -m 10
+        ./coreImgClip -s "../images/bags.jpg" -d "../images/newbags.jpg" -w 300 -h 200 -p 1 -m 10 -v 10
     ```
     参数帮助信息：
     ```
