@@ -82,13 +82,13 @@ golang: https://github.com/george518/PPGo_ClipImg   <br>
 ### 安装`php-ppc_CoreImgClip`扩展
 
 ```bash
-# 下载tclip
+# 下载
  git clone https://github.com/george518/ppc_coreimgclip.git
 
 # 进入php_ext
 cd php_ext/
 
-# 编译安装php-tclip
+# 编译安装
 phpize
 ./configure --with-php-config=/usr/bin/php-config
 make
