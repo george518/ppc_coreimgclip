@@ -18,17 +18,7 @@ PPC_CoreImgClip是一个php5扩展，他可以获取纯色底图中的核心图�
 处理图<br/>
 ![github](https://github.com/george518/ppc_coreimgclip/blob/master/images/newbags.jpg?raw=true "github")
 
-原图<br/>
-![github](https://github.com/george518/ppc_coreimgclip/blob/master/images/shoes.jpg?raw=true "github")
-处理图<br/>
-![github](https://github.com/george518/ppc_coreimgclip/blob/master/images/newshoes.jpg?raw=true "github")
-
-原图<br/>
-![github](https://github.com/george518/ppc_coreimgclip/blob/master/images/boy.png?raw=true "github")
-处理图<br/>
-![github](https://github.com/george518/ppc_coreimgclip/blob/master/images/newboy.png?raw=true "github")
-
-
+----
 ## 安装步骤：
 
 ### 源码下载
@@ -116,34 +106,34 @@ service php-fpm restart
     <?php
 
         #需要处理的图片绝对路径
-    $sourceImg = "/Users/haodaquan/Sites/Test/ppc_coreimgclip/bags.jpg";
-    #生成图片需要保存的路径和名称
-    $destImg   = "/Users/haodaquan/Sites/Test/ppc_coreimgclip/newbags.jpg";
-    #生成图片的宽度
-    $destWidth = 300;
-    #生成图片的高度
-    $destHeight = 600;
-    #图片的位置：
-    #1-水平垂直居中（默认）
-    #2-水平居中靠上
-    #3-水平居中靠下
-    #4-垂直居中靠左
-    #5-垂直居中靠右
-    #6-左上角
-    #7-右上角
-    #8-左下角
-    #9-右下角
-    $posion     = 1;
-    #边距
-    $margin = 10;
-    #颜色差值，越小越精准
-    $dValue = 10;
-
-    $res = ppc_coreimgclip($sourceImg,$destImg,$destWidth,$destHeight,$posion,$margin,$dValue);
-    var_dump($res);
+        $sourceImg = "/Users/haodaquan/Sites/Test/ppc_coreimgclip/bags.jpg";
+        #生成图片需要保存的路径和名称
+        $destImg   = "/Users/haodaquan/Sites/Test/ppc_coreimgclip/newbags.jpg";
+        #生成图片的宽度
+        $destWidth = 300;
+        #生成图片的高度
+        $destHeight = 600;
+        #图片的位置：
+        #1-水平垂直居中（默认）
+        #2-水平居中靠上
+        #3-水平居中靠下
+        #4-垂直居中靠左
+        #5-垂直居中靠右
+        #6-左上角
+        #7-右上角
+        #8-左下角
+        #9-右下角
+        $posion     = 1;
+        #边距
+        $margin = 10;
+        #颜色差值，越小越精准
+        $dValue = 10;
     
-    // 裁剪成功 $ret 为 true
-    // 裁剪失败 $ret 为 false 
+        $res = ppc_coreimgclip($sourceImg,$destImg,$destWidth,$destHeight,$posion,$margin,$dValue);
+        var_dump($res);
+        
+        # 裁剪成功 $res 为 true
+        # 裁剪失败 $res 为 false `
     ```
 
 有问题联系我
