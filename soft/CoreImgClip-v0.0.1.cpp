@@ -18,12 +18,20 @@
 using namespace cv;
 using namespace std;
 
-int N = 10;//颜色差值
+const int N = 50;
+
+string sourcePath = "";// 原图地址 用户输入
+string destPath = ""; //图片保存地址 用户输入
+int newWidth; //生成图的宽度 用户输入
+int newHeight; //生成图的高度 用户输入
+int pos; //1-居中 图片叠加位置 用户输入 
+int margin;//图片边距 用户输入 
+
 int R, G, B;
 int R0,G0,B0;
 int width,height;
-Point posXY = Point(0,0);
 
+Point posXY = Point(0,0);
 
 //计算两张图像复制位置
 Point copyPosion(int x0,int y0,int x1,int y1,int pos){
@@ -160,6 +168,8 @@ int bottomPoint(Mat &img){
 	return height;
 }
 
+
+
 #define show_debug(tip,message) if(debug){ cout << tip << message << endl;}
 
 void show_help() {
@@ -171,8 +181,6 @@ void show_help() {
 	cout << "-h<int>	the height of destination file. default value is 200" << endl;
 	cout << "-m<int>	the margin of the file. default value is 10 (px)" << endl;
 	cout << "-p<int>	the position of the file.1-center & middle,2-left" << endl;	//TODO p explain
-	cout << "-v<int>	the different color value" << endl;
-
 } 
 
 
@@ -188,20 +196,19 @@ int main(int argc, char** argv)
 		show_help();
 		return 1;
 	}
-
+	
 	//初始化参数
-	string sourcePath = ""; // 原图地址 用户输入
-	string destPath = "";  //图片保存地址 用户输入
-	int newWidth    = 300; //生成图的宽度 用户输入
-	int newHeight   = 200; //生成图的高度 用户输入
-	int pos 		= 1;   //1-居中 图片叠加位置 用户输入 
-	int margin      = 10;  //图片边距 用户输入
-	N = 10; 
-	posXY = Point(margin,margin);//剪切位置
+	newWidth = 300;
+	newHeight = 200;
+	margin = 10;
+	posXY.x = margin;
+	posXY.y = margin;
+	
+	int param;
+	//Mat img,coreImg,resizeImg,outImg;
 
 	//获取用户输入参数
-	int param;
-	while( (param = getopt(argc, argv, "H:s:d:w:h:p:m:v:")) != -1 )
+	while( (param = getopt(argc, argv, "H:s:d:w:h:p:m:")) != -1 )
 	{
 		if ( param == 's' ) {
 			sourcePath = optarg;
@@ -215,8 +222,6 @@ int main(int argc, char** argv)
 			sscanf (optarg, "%d", &pos);
 		}else if ( param == 'm' ) {
 			sscanf (optarg, "%d", &margin);
-		}else if ( param == 'v' ) {
-			sscanf (optarg, "%d", &N);
 		}
 	}
 	printf("用户输入参数:%d，%d,%d,%d \n\r",newWidth,newHeight,pos,margin);

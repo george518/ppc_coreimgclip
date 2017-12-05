@@ -61,144 +61,11 @@ ZEND_DECLARE_MODULE_GLOBALS(ppc_coreimgclip)
 
 /* True global resources - no need for thread safety here */
 /*static int le_ppc_coreimgclip;*/
-int R0,G0,B0;
-const int N = 50;
+long N = 10;
 int width,height;//原图宽高
+int R0,G0,B0;
 int R, G, B;
 Point posXY = Point(0,0);//切图位置
-bool isDiffColor(int R,int G,int B);
-int topPoint(Mat &img);
-int leftPoint(Mat &img);
-int rightPoint(Mat &img);
-int bottomPoint(Mat &img);
-Point copyPosion(int x0,int y0,int x1,int y1,int pos);
-
-//切图代码
-PHP_FUNCTION(ppc_coreimgclip)
-{
-	//用户输入
-	char *source_path = NULL;
-	char *dest_path = NULL;
-	int source_len, dest_len;
-	long dest_height, dest_width;
-	long margin;
-	long pos;
-
-	//其他参数
-	Mat img,coreImg;
-
-	//获取用户输入
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,
-		"ssllll",
-		&source_path, &source_len,
-		&dest_path, &dest_len,
-		&dest_width,
-		&dest_height,
-		&margin,
-		&pos) == FAILURE) {
-		return;
-	}
-
-	img = cv::imread( source_path );
-	if( !img.data ){
-		php_error_docref(NULL TSRMLS_CC, E_WARNING, "fail to load image from %s", source_path);
-		RETURN_FALSE;
-	}
-
-	//左上角像素作为底图的颜色
-	R0 = (int)img.at<Vec3b>(0,0)[0];
-	G0 = (int)img.at<Vec3b>(0,0)[1];
-	B0 = (int)img.at<Vec3b>(0,0)[2];
-
-	//原图的宽高
-	width  = img.cols;
-	height = img.rows;
-
-	//获取核心图坐标数据
-	    int top = topPoint(img);
-	    int left = leftPoint(img);
-	    int right = rightPoint(img);
-	    int bottom = bottomPoint(img);
-	    printf("核心图坐标：%d，%d,%d,%d \n\r",top,left,right,bottom);
-	    printf("\n\r==================================%d\n\r",2);
-
-	    //计算核心图片的宽高
-	    int coreWidth = right-left;
-	    int coreHeight = bottom-top;
-
-	    printf("核心图片的宽高：%d，%d \n\r",coreWidth,coreHeight);
-	    printf("\n\r==================================%d\n\r",3);
-
-	    //计算可用宽高
-	    int activeWidth = dest_width-2*margin;
-	    int activeHeight = dest_height-2*margin;
-
-	    printf("可用宽高：%d，%d \n\r",activeWidth,activeHeight);
-	    printf("\n\r==================================%d\n\r",4);
-
-	    //缩放后的核心图片宽和高
-	    int resizeCoreWidth,resizeCoreHeight;
-
-	    //计算实际图像大小
-	    if(coreHeight>coreWidth){
-	    	//如果高大于宽
-	    	resizeCoreHeight = activeHeight;
-	    	resizeCoreWidth = resizeCoreHeight * coreWidth / coreHeight;
-	    	//如果比例算出来的宽比可用宽度大,则以宽度为准
-	    	if(resizeCoreWidth>activeWidth){
-	    		resizeCoreWidth = activeWidth;
-	    		resizeCoreHeight = resizeCoreWidth * coreHeight / coreWidth;
-	    	}
-	    }else{
-	    	//同理
-	    	resizeCoreWidth = activeWidth;
-	    	resizeCoreHeight = resizeCoreWidth * coreHeight / coreWidth;
-	    	if(resizeCoreHeight>activeHeight){
-	    		resizeCoreHeight = activeHeight;
-	    		resizeCoreWidth = resizeCoreHeight * coreWidth / coreHeight;
-	    	}
-	    }
-
-	    printf("缩放后的宽高：%d，%d \n\r",resizeCoreWidth,resizeCoreHeight);
-	    printf("\n\r==================================%d\n\r",5);
-
-
-	    //截取核心图 共用img内存
-	    coreImg = img(Rect(left,top,coreWidth,coreHeight));
-
-
-	    //缩放图片
-	    Mat resizeImg(dest_width,dest_height,CV_8UC4,cv::Scalar(R0,G0,B0));
-	    resize(coreImg,resizeImg,Size(resizeCoreWidth,resizeCoreHeight),0,0,INTER_LINEAR);
-	    printf("合成坐标：%d，%d \n\r",posXY.x,posXY.y);
-	    printf("\n\r==================================%d\n\r",6);
-
-	    //计算合成图片的坐标
-	    copyPosion(resizeCoreWidth,resizeCoreHeight,activeWidth,activeHeight,1);
-	    printf("参数：%d，%d,%d,%d,%d,%d\n\r",posXY.x,posXY.y,dest_width,dest_height,resizeCoreWidth,resizeCoreHeight);
-	       printf("\n\r==================================%d\n\r",7);
-	    //合成图片
-	    Mat outImg(dest_height,dest_width,resizeImg.type(),cv::Scalar(R0,G0,B0));
-	    resizeImg.copyTo(outImg(cv::Rect((posXY.x+margin),(posXY.y+margin),resizeCoreWidth,resizeCoreHeight)));
-
-
-		try{
-			cv::imwrite(dest_path, outImg);
-		}
-		catch (exception &e)
-		{
-			php_error_docref(NULL TSRMLS_CC, E_WARNING, e.what());
-			RETURN_FALSE;
-		}
-
-	    //释放资源
-		img.release();
-		coreImg.release();
-		outImg.release();
-		resizeImg.release();
-
-		RETURN_TRUE;
-}
 
 //计算两张图像复制位置
 Point copyPosion(int x0,int y0,int x1,int y1,int pos){
@@ -259,6 +126,13 @@ Point copyPosion(int x0,int y0,int x1,int y1,int pos){
 		break;
 	}
 	return posXY;
+}
+
+bool isDiffColor(int R1,int G1,int B1){
+	if(abs(R0-R1)>=N || abs(G0-G1)>=N || abs(B0-B1)>=N){
+		return true;
+	}
+	return false;
 }
 
 int topPoint(Mat &img){
@@ -329,15 +203,119 @@ int bottomPoint(Mat &img){
 	return height;
 }
 
-/**
- * test color
- */
-bool isDiffColor(int R1,int G1,int B1){
-	if(abs(R0-R1)>=N || abs(G0-G1)>=N || abs(B0-B1)>=N){
-		return true;
+//切图代码
+PHP_FUNCTION(ppc_coreimgclip)
+{
+	//用户输入
+	char *source_path = NULL;
+	char *dest_path = NULL;
+	int  source_len, dest_len;
+	long dest_height, dest_width;
+	long margin;
+	long pos;
+
+	//其他参数
+	Mat img,coreImg;
+
+	//获取用户输入
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,
+		"sslllll",
+		&source_path, &source_len,
+		&dest_path, &dest_len,
+		&dest_width,
+		&dest_height,
+		&margin,
+		&pos,
+		&N) == FAILURE) {
+		return;
 	}
-	return false;
+
+	img = cv::imread( source_path ,-1);
+	if( !img.data ){
+		php_error_docref(NULL TSRMLS_CC, E_WARNING, "fail to load image from %s", source_path);
+		RETURN_FALSE;
+	}
+
+	//左上角像素作为底图的颜色
+	R0 = (int)img.at<Vec3b>(0,0)[0];
+	G0 = (int)img.at<Vec3b>(0,0)[1];
+	B0 = (int)img.at<Vec3b>(0,0)[2];
+
+	//原图的宽高
+	width  = img.cols;
+	height = img.rows;
+
+	//获取核心图坐标数据
+	    int top = topPoint(img);
+	    int left = leftPoint(img);
+	    int right = rightPoint(img);
+	    int bottom = bottomPoint(img);
+
+	    //计算核心图片的宽高
+	    int coreWidth = right-left;
+	    int coreHeight = bottom-top;
+
+	    //计算可用宽高
+	    int activeWidth = dest_width-2*margin;
+	    int activeHeight = dest_height-2*margin;
+
+	    //缩放后的核心图片宽和高
+	    int resizeCoreWidth,resizeCoreHeight;
+
+	    //计算实际图像大小
+	    if(coreHeight>coreWidth){
+	    	//如果高大于宽
+	    	resizeCoreHeight = activeHeight;
+	    	resizeCoreWidth = resizeCoreHeight * coreWidth / coreHeight;
+	    	//如果比例算出来的宽比可用宽度大,则以宽度为准
+	    	if(resizeCoreWidth>activeWidth){
+	    		resizeCoreWidth = activeWidth;
+	    		resizeCoreHeight = resizeCoreWidth * coreHeight / coreWidth;
+	    	}
+	    }else{
+	    	//同理
+	    	resizeCoreWidth = activeWidth;
+	    	resizeCoreHeight = resizeCoreWidth * coreHeight / coreWidth;
+	    	if(resizeCoreHeight>activeHeight){
+	    		resizeCoreHeight = activeHeight;
+	    		resizeCoreWidth = resizeCoreHeight * coreWidth / coreHeight;
+	    	}
+	    }
+
+	    //截取核心图 共用img内存
+	    coreImg = img(Rect(left,top,coreWidth,coreHeight));
+
+
+	    //缩放图片
+	    Mat resizeImg(dest_width,dest_height,CV_8UC4,cv::Scalar(R0,G0,B0));
+	    resize(coreImg,resizeImg,Size(resizeCoreWidth,resizeCoreHeight),0,0,INTER_LINEAR);
+
+	    //计算合成图片的坐标
+	    copyPosion(resizeCoreWidth,resizeCoreHeight,activeWidth,activeHeight,1);
+	    //合成图片
+	    Mat outImg(dest_height,dest_width,resizeImg.type(),cv::Scalar(R0,G0,B0));
+	    resizeImg.copyTo(outImg(cv::Rect((posXY.x+margin),(posXY.y+margin),resizeCoreWidth,resizeCoreHeight)));
+
+		try{
+			cv::imwrite(dest_path, outImg);
+		}
+		catch (exception &e)
+		{
+			php_error_docref(NULL TSRMLS_CC, E_WARNING, e.what());
+			RETURN_FALSE;
+		}
+
+	    //释放资源
+		img.release();
+		coreImg.release();
+		outImg.release();
+		resizeImg.release();
+
+		RETURN_TRUE;
 }
+
+
+
 
 /* {{{ PHP_INI
  */
