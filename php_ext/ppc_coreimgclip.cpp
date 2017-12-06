@@ -291,7 +291,7 @@ PHP_FUNCTION(ppc_coreimgclip)
 	    resize(coreImg,resizeImg,Size(resizeCoreWidth,resizeCoreHeight),0,0,INTER_LINEAR);
 
 	    //计算合成图片的坐标
-	    copyPosion(resizeCoreWidth,resizeCoreHeight,activeWidth,activeHeight,1);
+	    copyPosion(resizeCoreWidth,resizeCoreHeight,activeWidth,activeHeight,pos);
 	    //合成图片
 	    Mat outImg(dest_height,dest_width,resizeImg.type(),cv::Scalar(R0,G0,B0));
 	    resizeImg.copyTo(outImg(cv::Rect((posXY.x+margin),(posXY.y+margin),resizeCoreWidth,resizeCoreHeight)));

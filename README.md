@@ -8,7 +8,7 @@ PPC_CoreImgClip是一个php5扩展，他可以获取纯色底图中的核心图�
 ----
 1、处理图片，jpg,jpeg,png格式的图片       
 2、可做为php开发扩展的学习使用 
-3、soft文件里是C++实现图片剪切功能代码，可以编译后直接使用
+3、soft文件里是C++实现图片剪切功能代码，可以编译后直接使用 
 另外，还有GO和python相关版本，请移步：
 Python: https://github.com/george518/CoreImage    
 golang: https://github.com/george518/PPGo_ClipImg   <br>

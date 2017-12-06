@@ -29,6 +29,7 @@ Point posXY = Point(0,0);
 Point copyPosion(int x0,int y0,int x1,int y1,int pos){
 	int y = y1-y0;
 	int x = x1-x0;
+	printf("\n\r位置参数==================================%d\n\r",pos);
 	switch (pos)
 	{
 		case 1:
@@ -304,7 +305,7 @@ int main(int argc, char** argv)
     resize(coreImg,resizeImg,Size(resizeCoreWidth,resizeCoreHeight),0,0,INTER_LINEAR);
 
     //计算合成图片的坐标
-    copyPosion(resizeCoreWidth,resizeCoreHeight,activeWidth,activeHeight,1);
+    copyPosion(resizeCoreWidth,resizeCoreHeight,activeWidth,activeHeight,pos);
 
     printf("合成坐标：%d，%d \n\r",posXY.x,posXY.y);
     printf("\n\r==================================%d\n\r",6);
