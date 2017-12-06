@@ -119,6 +119,8 @@ service php-fpm restart
         $destWidth = 300;
         #生成图片的高度
         $destHeight = 600;
+        #边距
+        $margin = 10;
         #图片的位置：
         #1-水平垂直居中（默认）
         #2-水平居中靠上
@@ -130,12 +132,11 @@ service php-fpm restart
         #8-左下角
         #9-右下角
         $posion     = 1;
-        #边距
-        $margin = 10;
+        
         #颜色差值，越小越精准
         $dValue = 10;
     
-        $res = ppc_coreimgclip($sourceImg,$destImg,$destWidth,$destHeight,$posion,$margin,$dValue);
+        $res = ppc_coreimgclip($sourceImg,$destImg,$destWidth,$destHeight,$margin,$posion,$dValue);
         var_dump($res);
         
         # 裁剪成功 $res 为 true
