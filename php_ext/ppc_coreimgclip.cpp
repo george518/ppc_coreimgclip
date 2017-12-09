@@ -334,19 +334,7 @@ PHP_INI_END()
 /* Every user-visible function in PHP should document itself in the source */
 /* {{{ proto string confirm_ppc_coreimgclip_compiled(string arg)
    Return a string to confirm that the module is compiled in */
-PHP_FUNCTION(confirm_ppc_coreimgclip_compiled)
-{
-	char *arg = NULL;
-	int arg_len, len;
-	char *strg;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &arg, &arg_len) == FAILURE) {
-		return;
-	}
-
-	len = spprintf(&strg, 0, "Congratulations! You have successfully modified ext/%.78s/config.m4. Module %.78s is now compiled into PHP.", "ppc_coreimgclip", arg);
-	RETURN_STRINGL(strg, len, 0);
-}
 /* }}} */
 /* The previous line is meant for vim and emacs, so it can correctly fold and
    unfold functions in source code. See the corresponding marks just before
@@ -426,7 +414,6 @@ PHP_MINFO_FUNCTION(ppc_coreimgclip)
  */
 const zend_function_entry ppc_coreimgclip_functions[] = {
 	PHP_FE(ppc_coreimgclip,NULL)
-	PHP_FE(confirm_ppc_coreimgclip_compiled,NULL)
 	PHP_FE_END	/* Must be the last line in ppc_coreimgclip_functions[] */
 };
 /* }}} */
