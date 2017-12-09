@@ -2,7 +2,7 @@ PPC_CoreImgClip
 ====
 啥东西？What?
 ----
-PPC_CoreImgClip是一个php5扩展，他可以获取纯色底图中的核心图，并生成自定义尺寸和边距的新图片。
+PPC_CoreImgClip是一个php扩展，支持php5和php7,他可以获取纯色底图中的核心图，并生成自定义尺寸和边距的新图片。
 
 有什么价值？
 ----
@@ -63,19 +63,20 @@ golang: https://github.com/george518/PPGo_ClipImg   <br>
     make -j $(cat /proc/cpuinfo|grep processor|wc -l)
     make install
     ```
-    
+<br />
+注意：安装opencv过程中可能会遇到很多的警告性信息，只要可以编译通过就可以了，不必在意。
 * **设置环境变量**
 
     ```bash
     cp -p /etc/profile{,.$(date +%F_%T)}
     
-    # 在/etc/profile unset i前增加PKG_CONFIG_PATH
-    grep '^PKG_CONFIG_PATH' /etc/profile||sed -i '/^unset i/iexport PKG_CONFIG_PATH=/usr/lib/pkgconfig/:/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH' /etc/profile
-    source /etc/profile
+    ## 在/etc/profile unset i前增加PKG_CONFIG_PATH
+    # grep '^PKG_CONFIG_PATH' /etc/profile||sed -i '/^unset i/iexport PKG_CONFIG_PATH=/usr/lib/pkgconfig/:/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH' /etc/profile
+    # source /etc/profile
     
-    [[ -f /etc/ld.so.conf.d/opencv.conf ]] && cp -p /etc/ld.so.conf.d/opencv.conf{,.$(date +%F)}
-    echo "/usr/local/lib/" > /etc/ld.so.conf.d/opencv.conf
-    ldconfig
+    #[[ -f /etc/ld.so.conf.d/opencv.conf ]] && cp -p /etc/ld.so.conf.d/opencv.conf{,.$(date +%F)}
+    #echo "/usr/local/lib/" > /etc/ld.so.conf.d/opencv.conf
+    #ldconfig
     ```
 
 
